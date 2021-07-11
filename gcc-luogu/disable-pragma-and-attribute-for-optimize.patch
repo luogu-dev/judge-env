@@ -1,0 +1,47 @@
+From 4f0e2a7a2a1a8a59915ea1d1838ca1a8ac86e01e Mon Sep 17 00:00:00 2001
+From: Soha Jin <soha@lohu.info>
+Date: Thu, 1 Jul 2021 16:47:12 +0800
+Subject: [PATCH] disable optimize pragmas and attributes in ONLINE_JUDGE environment
+
+---
+ gcc/c-family/c-attribs.c | 6 ++++++
+ gcc/c-family/c-pragma.c  | 6 ++++++
+ 2 files changed, 12 insertions(+)
+
+diff --git a/gcc/c-family/c-attribs.c b/gcc/c-family/c-attribs.c
+index cdf89d66f..9551c0bcc 100644
+--- a/gcc/c-family/c-attribs.c
++++ b/gcc/c-family/c-attribs.c
+@@ -5336,6 +5336,12 @@ static tree
+ handle_optimize_attribute (tree *node, tree name, tree args,
+ 			   int ARG_UNUSED (flags), bool *no_add_attrs)
+ {
++  if (getenv("ONLINE_JUDGE"))
++    {
++      error_at (DECL_SOURCE_LOCATION (*node), "%qE attribute is disallowed in online judge mode", name);
++      return NULL_TREE;
++    }
++
+   /* Ensure we have a function type.  */
+   if (TREE_CODE (*node) != FUNCTION_DECL)
+     {
+diff --git a/gcc/c-family/c-pragma.c b/gcc/c-family/c-pragma.c
+index 4f8e8e012..4c203726c 100644
+--- a/gcc/c-family/c-pragma.c
++++ b/gcc/c-family/c-pragma.c
+@@ -930,6 +930,12 @@ handle_pragma_optimize (cpp_reader *ARG_UNUSED(dummy))
+   bool close_paren_needed_p = false;
+   tree optimization_previous_node = optimization_current_node;
+ 
++  if (getenv("ONLINE_JUDGE"))
++    {
++      error ("%<#pragma GCC optimize%> is not allowed in online judge mode");
++      return;
++    }
++
+   if (cfun)
+     {
+       error ("%<#pragma GCC optimize%> is not allowed inside functions");
+-- 
+2.32.0
+
