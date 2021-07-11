@@ -46,12 +46,21 @@ in stdenv.mkDerivation {
 	buildInputs = [ makeWrapper unwrapped ];
 	propagatedBuildInputs = [ jre ];
 
+	dependenciesLinkHelper = ''#!/bin/bash
+		konan_dir=''${KONAN_DATA_DIR:-''${HOME:-/tmp}/.konan}
+		if [ ! -d "$konan_dir/dependencies" ]; then
+			mkdir -p $konan_dir
+			ln -s ${unwrapped}/konan-data/dependencies $konan_dir/dependencies
+		fi
+	'';
 	installPhase = ''
 		mkdir -p $out/bin
+		echo "$dependenciesLinkHelper" > $out/dependenciesLinkHelper.sh
+		chmod a+x $out/dependenciesLinkHelper.sh
 		for p in $(ls ${unwrapped}/bin/); do
 			makeWrapper ${unwrapped}/bin/$p $out/bin/$p \
 				--prefix PATH ":" ${jre}/bin \
-				--set KONAN_DATA_DIR ${unwrapped}/konan-data \
+				--run $out/dependenciesLinkHelper.sh \
 			;
 		done
 	'';

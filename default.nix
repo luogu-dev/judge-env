@@ -1,24 +1,13 @@
-{ nixpkgs ? import <nixpkgs> {} }: with nixpkgs; 
-let
+with (import <nixpkgs> {
+	overlays = [
+		(import (builtins.fetchTarball "https://github.com/oxalica/rust-overlay/archive/master.tar.gz"))
+	];
+}); {
+	# C, C++
 	gcc = (callPackage ./gcc-luogu {}).gcc;
 
-	kotlin-native = callPackage ./kotlin-native {};
-
-	python3 = python39.withPackages(p: with p; [
-		numpy
-	]);
-
-	python2 = python27.withPackages(p: with p; [
-		numpy
-	]);
-
-	pypy2 = pypy;
-in {
-	# C, C++
-	inherit gcc;
-
 	# Rust
-	inherit rustc;
+	rust = rust-bin.nightly.latest.default;
 
 	# Haskell
 	inherit ghc;
@@ -36,12 +25,16 @@ in {
 	inherit perl;
 
 	# Python 3
-	inherit python3;
-	inherit pypy3;
+	python3 = python39.withPackages(p: with p; [
+		numpy
+	]);
+	pypy3 = pypy3;
 
 	# Python 2
-	inherit python2;
-	inherit pypy2;
+	python2 = python27.withPackages(p: with p; [
+		numpy
+	]);
+	pypy2 = pypy;
 
 	# C#, F#, Visual Basic
 	inherit mono;
@@ -71,5 +64,5 @@ in {
 	inherit kotlin;
 
 	# Kotlin/Native
-	inherit kotlin-native;
+	kotlin-native = callPackage ./kotlin-native {};
 }
