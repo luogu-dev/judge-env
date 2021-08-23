@@ -20,7 +20,7 @@ let
 			export KONAN_DATA_DIR=$PWD/konan-data
 			export PATH=$PATH:${jre}/bin:$PWD/build-bin
 			cp -r bin build-bin
-			patchShebangs --build build-bin
+			patchShebangs build-bin
 			kotlinc-native -Xcheck-dependencies
 			rm -r build-bin
 		'';
@@ -28,6 +28,7 @@ let
 			mkdir -p $out
 			mv * $out
 			rm $out/bin/kotlinc # kotlinc will be removed in the future
+			patchShebangs bin
 		'';
 
 		dontFixup = true;

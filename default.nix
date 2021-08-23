@@ -1,13 +1,14 @@
-with (import <nixpkgs> {
+let pkgs = (import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/430a043a187872d8b065c073839997719b564611.tar.gz") {
 	overlays = [
 		(import (builtins.fetchTarball "https://github.com/oxalica/rust-overlay/archive/master.tar.gz"))
 	];
-}); {
+});
+in with pkgs; {
 	# C, C++
-	gcc = (callPackage ./gcc-luogu {}).gcc;
+	gcc = (callPackage ./gcc-luogu { inherit pkgs; }).gcc;
 
 	# Rust
-	rust = rust-bin.nightly.latest.default;
+	rust = rust-bin.nightly."2021-08-23".default;
 
 	# Haskell
 	inherit ghc;
@@ -39,7 +40,7 @@ with (import <nixpkgs> {
 	# C#, F#, Visual Basic
 	inherit mono;
 
-	# Java
+	# Java 8
 	inherit jdk8;
 
 	# OCaml
@@ -64,5 +65,5 @@ with (import <nixpkgs> {
 	inherit kotlin;
 
 	# Kotlin/Native
-	kotlin-native = callPackage ./kotlin-native {};
+	kotlin-native = (callPackage ./kotlin-native { inherit pkgs; });
 }
