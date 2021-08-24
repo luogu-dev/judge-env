@@ -3,8 +3,8 @@
 # However this nix file just works on Luogu Judge.
 let
 	pname = "kotlin-native";
-	version = "1.5.20";
-	sha256 = "9449219ec9465b14adda1b730ac14ef02da93e9f98219f7303bf70c4c875b7db";
+	version = "1.5.21";
+	sha256 = "fa3dfec9c11711c2b713a1482bcc4511bb8f73f182f12aa7d858943f6f084397";
 
 	unwrapped = stdenv.mkDerivation {
 		pname = "${pname}-unwrapped";
@@ -14,30 +14,28 @@ let
 			url = "https://github.com/JetBrains/kotlin/releases/download/v${version}/kotlin-native-linux-${version}.tar.gz";
 			inherit sha256;
 		};
-		propagatedBuildInputs = [ jre ];
+		propagatedBuildInputs = [ jre bash ];
 
 		buildPhase = ''
 			export KONAN_DATA_DIR=$PWD/konan-data
-			export PATH=$PATH:${jre}/bin:$PWD/build-bin
-			cp -r bin build-bin
-			patchShebangs build-bin
+			export PATH=$PATH:${jre}/bin:$PWD/bin
+			rm bin/kotlinc # kotlinc is deprecated and will be removed in the future
+			patchShebangs bin
 			kotlinc-native -Xcheck-dependencies
-			rm -r build-bin
 		'';
 		installPhase = ''
 			mkdir -p $out
 			mv * $out
-			rm $out/bin/kotlinc # kotlinc will be removed in the future
-			patchShebangs bin
 		'';
 
 		dontFixup = true;
 		dontStrip = true;
 		dontPatchELF = true;
+		dontPatchShebangs = true;
 
 		outputHashMode = "recursive";
 		outputHashAlgo = "sha256";
-		outputHash = "01kxmkd9vcjl0x4g9ylihz6z426zlm7jk2y5q580zs0prncqrk7x";
+		outputHash = "0rpb3qd6slfp6wms8aj706zhdyqsr0cz3w64ri26w4ljh4d5fns1";
 	};
 in stdenv.mkDerivation {
 	inherit pname;
@@ -56,12 +54,10 @@ in stdenv.mkDerivation {
 	'';
 	installPhase = ''
 		mkdir -p $out/bin
-		echo "$dependenciesLinkHelper" > $out/dependenciesLinkHelper.sh
-		chmod a+x $out/dependenciesLinkHelper.sh
 		for p in $(ls ${unwrapped}/bin/); do
 			makeWrapper ${unwrapped}/bin/$p $out/bin/$p \
 				--prefix PATH ":" ${jre}/bin \
-				--run $out/dependenciesLinkHelper.sh \
+				--run "$dependenciesLinkHelper" \
 			;
 		done
 	'';

@@ -4,6 +4,12 @@ let pkgs = (import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/430a0
 	];
 });
 in with pkgs; {
+	# Basic utils
+	inherit coreutils;
+	inherit bash;
+	inherit gnutar;
+	inherit openssl;
+
 	# C, C++
 	gcc = (callPackage ./gcc-luogu { inherit pkgs; }).gcc;
 
