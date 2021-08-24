@@ -70,6 +70,7 @@ in with pkgs; {
 	# Kotlin/JVM
 	inherit kotlin;
 
-	# Kotlin/Native
-	kotlin-native = (callPackage ./kotlin-native { inherit pkgs; });
+	# Why? check ./kotlin-native/default.nix
+	# # Kotlin/Native
+	# kotlin-native = (callPackage ./kotlin-native { inherit pkgs; });
 }

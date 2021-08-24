@@ -1,6 +1,14 @@
 { pkgs ? import <nixpkgs> {} }: with pkgs;
 # The compiler Kotlin/Native is just like a piece of shit
-# However this nix file just works on Luogu Judge.
+# FIXME: unusable
+# The f**king compiler will download some dependencies on its own, such as LLVM and sysroot.
+# Fine, I can let you self download them (check unwrapped.buildPhase).
+# BUT the dependencies are not static-linked, and they didn't bring everything they need.
+# Which means, they still needs other libraries from system, such as libtinfo.so.5.
+# OK, althrough ncurses has upgraded to 6.x, I can still install ncurses5 for you (check propagatedBuildInputs)
+# ncurses needs glibc? OK, I give it to you. But why does it throw the error below?
+# `./clang++: symbol lookup error: /nix/store/9bh3986bpragfjmr32gay8p95k91q4gy-glibc-2.33-47/lib/libc.so.6: undefined symbol: _dl_catch_error_ptr, version GLIBC_PRIVATE`
+# YOU WIN. I GAVE UP. Goodbye and I will drop Kotlin/Native support from Luogu.
 let
 	pname = "kotlin-native";
 	version = "1.5.21";
