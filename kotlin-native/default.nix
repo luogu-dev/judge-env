@@ -35,7 +35,7 @@ let
 
 		outputHashMode = "recursive";
 		outputHashAlgo = "sha256";
-		outputHash = "0rpb3qd6slfp6wms8aj706zhdyqsr0cz3w64ri26w4ljh4d5fns1";
+		outputHash = "1qqvkcgz2736din1npaji0qy49va4vssskm4msngamgm5m9n78da";
 	};
 in stdenv.mkDerivation {
 	inherit pname;
@@ -43,7 +43,7 @@ in stdenv.mkDerivation {
 
 	dontUnpack = true;
 	buildInputs = [ makeWrapper unwrapped ];
-	propagatedBuildInputs = [ jre ];
+	propagatedBuildInputs = [ jre ncurses5 glibc ];
 
 	dependenciesLinkHelper = ''#!/bin/bash
 		konan_dir=''${KONAN_DATA_DIR:-''${HOME:-/tmp}/.konan}
@@ -56,6 +56,7 @@ in stdenv.mkDerivation {
 		mkdir -p $out/bin
 		for p in $(ls ${unwrapped}/bin/); do
 			makeWrapper ${unwrapped}/bin/$p $out/bin/$p \
+				--prefix LD_LIBRARY_PATH ":" ${ncurses5}/lib:${glibc}/lib \
 				--prefix PATH ":" ${jre}/bin \
 				--run "$dependenciesLinkHelper" \
 			;
