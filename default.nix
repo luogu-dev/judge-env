@@ -9,6 +9,7 @@ in with pkgs; {
 	inherit bash;
 	inherit gnutar;
 	inherit openssl;
+	checker = (callPackage ./checker { inherit pkgs; });
 
 	# C, C++
 	gcc = (callPackage ./gcc-luogu { inherit pkgs; }).gcc;
