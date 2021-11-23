@@ -1,4 +1,4 @@
-let pkgs = (import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/430a043a187872d8b065c073839997719b564611.tar.gz") {
+let pkgs = (import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/57be0c5d9650a5c3970439ba7a1f4a017cd98cc0.tar.gz") {
 	overlays = [
 		(import (builtins.fetchTarball "https://github.com/oxalica/rust-overlay/archive/master.tar.gz"))
 	];
@@ -15,7 +15,7 @@ in with pkgs; {
 	gcc = (callPackage ./gcc-luogu { inherit pkgs; }).gcc;
 
 	# Rust
-	rust = rust-bin.nightly."2021-08-23".default;
+	rust = rust-bin.nightly."2021-11-22".default;
 
 	# Haskell
 	inherit ghc;
