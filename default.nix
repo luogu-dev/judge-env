@@ -7,9 +7,11 @@ in with pkgs; {
 	# Basic utils
 	inherit coreutils;
 	inherit bash;
-	inherit gnutar;
-	inherit openssl;
 	checker = (callPackage ./checker { inherit pkgs; });
+
+	# for AnswerFile
+	inherit gnutar;
+	inherit gzip;
 
 	# C, C++
 	gcc = (callPackage ./gcc-luogu { inherit pkgs; }).gcc;
@@ -48,7 +50,7 @@ in with pkgs; {
 	inherit mono;
 
 	# Java 8
-	inherit jdk8;
+	jdk8 = jdk8_headless;
 
 	# OCaml
 	inherit ocaml;
