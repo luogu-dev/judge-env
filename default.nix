@@ -49,9 +49,6 @@ in with pkgs; {
 	# C#, F#, Visual Basic
 	inherit mono;
 
-	# Java 8
-	jdk8 = jdk8_headless;
-
 	# OCaml
 	inherit ocaml;
 
@@ -61,17 +58,20 @@ in with pkgs; {
 	# Lua
 	inherit lua;
 
-	# Scala
-	inherit scala;
-
 	# Golang
 	inherit go;
 
 	# Node.js
 	inherit nodejs;
 
+	# Java 8
+	jdk8 = jdk8_headless;
+
+	# Scala
+	scala = scala.override { jre = jre8_headless; };
+
 	# Kotlin/JVM
-	inherit kotlin;
+	kotlin = kotlin.override { jre = jre8_headless; };
 
 	# Why? check ./kotlin-native/default.nix
 	# # Kotlin/Native
