@@ -1,8 +1,10 @@
-let pkgs = (import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/57be0c5d9650a5c3970439ba7a1f4a017cd98cc0.tar.gz") {
-	overlays = [
-		(import (builtins.fetchTarball "https://github.com/oxalica/rust-overlay/archive/master.tar.gz"))
-	];
-});
+let
+	pkgs = (import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/57be0c5d9650a5c3970439ba7a1f4a017cd98cc0.tar.gz") {
+		overlays = [
+			(import (builtins.fetchTarball "https://github.com/oxalica/rust-overlay/archive/master.tar.gz"))
+		];
+	});
+	luoguGcc = import ./gcc-luogu { inherit pkgs; };
 in with pkgs; {
 	# Basic utils
 	inherit coreutils;
@@ -14,7 +16,8 @@ in with pkgs; {
 	inherit gzip;
 
 	# C, C++
-	gcc = (callPackage ./gcc-luogu { inherit pkgs; }).gcc;
+	gcc = luoguGcc.gcc;
+	# gcc9 = luoguGcc.gcc9; # NOI/NOIP uses GCC 9.3.0
 
 	# Rust
 	rust = rust-bin.nightly."2021-11-22".default;
