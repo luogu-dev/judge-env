@@ -24,13 +24,12 @@
 
 		createEnv = name: packages: (pkgs.buildEnv {
 			name = "ljudge-env_${builtins.replaceStrings ["/"] ["_"] name}";
-			paths = with pkgs; [
-				coreutils bash
-				ljudge-checker
-			] ++ packages;
+			paths = with pkgs; [coreutils bash] ++ packages;
 		});
 	in {
 		packages."${system}" = lib.mapAttrs createEnv (with pkgs; {
+			nul = [];
+			checker = [ljudge-checker];
 			text = [gnutar gzip];
 			gcc = [luogu-gcc];
 			gcc-930 = [luogu-gcc930];
