@@ -6,6 +6,9 @@ self: super: with super; let
 			inherit pname;
 			patches = patches ++ additionalPatches;
 		});
+		extraBuildCommands = ''
+			echo "-idirafter ${testlib}/include" >> $out/nix-support/libc-cflags
+		'';
 	};
 in {
 	luogu-gcc = applyLuogu gcc13 [

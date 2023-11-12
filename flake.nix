@@ -16,6 +16,7 @@
 				(self: super: {
 					gcc930 = nixpkgs_gcc930.legacyPackages.${super.system}.gcc9;
 				})
+				(import ./testlib/overlay.nix)
 				(import ./gcc/overlay.nix)
 				(import ./checker/overlay.nix)
 			];
