@@ -1,15 +1,17 @@
-self: super: let
+self: super: with super; let
 	pname = "luogu-gcc";
 
-	applyLuogu = gcc: let
+	applyLuogu = gcc: additionalPatches: wrapCCWith {
 		cc = gcc.cc.overrideAttrs(a: with a; {
 			inherit pname;
-			patches = patches ++ [
-				./disable-pragma-and-attribute-for-optimize.patch
-			];
+			patches = patches ++ additionalPatches;
 		});
-	in super.wrapCC(cc);
+	};
 in {
-	luogu-gcc = applyLuogu(super.gcc13);
-	luogu-gcc930 = applyLuogu(super.gcc930);
+	luogu-gcc = applyLuogu gcc13 [
+		./13_disable-pragma-and-attribute-for-optimize.patch
+	];
+	luogu-gcc930 = applyLuogu gcc930 [
+		./9_disable-pragma-and-attribute-for-optimize.patch
+	];
 }
