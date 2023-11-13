@@ -33,13 +33,13 @@
 			text = [gnutar gzip];
 			gcc = [luogu-gcc];
 			gcc-930 = [luogu-gcc930];
-			rustc = [rust-bin.nightly.latest.default];
+			rustc = [rust-bin.nightly.latest.default luogu-gcc];
 			ghc = [ghc];
 			python3-c = [(python311.withPackages (p: with p; [
 				numpy
 			]))];
 			python3-py = [pypy3];
-			pascal-fpc = [fpc];
+			pascal-fpc = [fpc binutils];
 			go = [go];
 			php = [(php82.buildEnv {
 				extensions = { all, ... }: with all; [
@@ -56,7 +56,7 @@
 			scala = [(scala.override { jre = jdk21_headless; })];
 			lua = [lua];
 			mono = [mono]; # TODO: use dotnet
-			ocaml = [ocaml];
+			ocaml = [ocaml luogu-gcc];
 			julia = [julia];
 		});
 		# packages."${system}" = {
