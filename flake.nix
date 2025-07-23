@@ -33,22 +33,22 @@
 			text = [gnutar gzip];
 			gcc = [luogu-gcc];
 			gcc-930 = [luogu-gcc930];
-			rustc = [rust-bin.nightly.latest.default luogu-gcc];
+			rustc = [rust-bin.stable.latest.default luogu-gcc];
 			ghc = [ghc];
-			python3-c = [(python311.withPackages (p: with p; [
+			python3-c = [(python313.withPackages (p: with p; [
 				numpy
 			]))];
 			python3-py = [pypy3];
 			pascal-fpc = [fpc binutils];
 			go = [go];
-			php = [(php82.buildEnv {
+			php = [(php84.buildEnv {
 				extensions = { all, ... }: with all; [
 					opcache ctype posix filter bcmath
 					iconv mbstring readline gmp
 				];
 			})];
 			ruby = [ruby];
-			js-node = [nodejs_20];
+			js-node = [nodejs_22];
 			perl = [perl];
 			java-8 = [jdk8_headless];
 			java-21 = [jdk21_headless];

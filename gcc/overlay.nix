@@ -11,7 +11,7 @@ self: super: with super; let
 		'';
 	};
 in {
-	luogu-gcc = applyLuogu gcc13 [
+	luogu-gcc = applyLuogu gcc15 [
 		./13_disable-pragma-and-attribute-for-optimize.patch
 	];
 	luogu-gcc930 = applyLuogu gcc930 [
