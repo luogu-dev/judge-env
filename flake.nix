@@ -2,11 +2,13 @@
 	description = "Luogu Judge Environment";
 	inputs = {
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
-		nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.05-small";
 		nixpkgs_gcc930.url = "github:NixOS/nixpkgs/99cd95772761842712f77c291d26443ee039d862";
-		rust-overlay.url = "github:oxalica/rust-overlay";
+		rust-overlay = {
+			url = "github:oxalica/rust-overlay";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
-	outputs = inputs@{ self, nixpkgs, nixpkgs-stable, nixpkgs_gcc930, rust-overlay, ... }: let
+	outputs = inputs@{ self, nixpkgs, nixpkgs_gcc930, rust-overlay, ... }: let
 		system = "x86_64-linux";
 
 		inherit(nixpkgs) lib;
@@ -20,7 +22,6 @@
 				(import ./testlib/overlay.nix)
 				(import ./gcc/overlay.nix)
 				(import ./checker/overlay.nix)
-				(self: super: { pypy3 = nixpkgs-stable.legacyPackages.${super.system}.pypy3; })  # pypy workaround (NixOS/nixpkgs#419942)
 			];
 		};
 
