@@ -28,8 +28,8 @@
 			name = "ljudge-env_${builtins.replaceStrings ["/"] ["_"] name}";
 			paths = with pkgs; [coreutils bash] ++ packages;
 		});
-	in {
-		packages."${system}" = lib.mapAttrs createEnv (with pkgs; {
+
+		envPkgs = lib.mapAttrs createEnv (with pkgs; {
 			nul = [];
 			checker = [ljudge-checker];
 			text = [gnutar gzip];
@@ -61,15 +61,8 @@
 			ocaml = [ocaml luogu-gcc];
 			julia = [julia];
 		});
-		# packages."${system}" = {
-		# 	text = createJudgeProfile "text" [gnutar gzip];
-
-		# 	# C-family: GCC
-		# 	gcc = pkgs.luogu-gcc;
-		# 	gcc9 = pkgs.luogu-gcc-9;
-
-		# 	# Rust
-		# 	rust = pkgs.rust-bin.nightly.latest.default;
-		# };
+	in {
+		packages."${system}" = envPkgs;
+		overlays.default = self: super: { ljudge-envs = envPkgs; };
 	};
 }
