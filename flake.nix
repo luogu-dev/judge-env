@@ -21,6 +21,7 @@
 				})
 				(import ./testlib/overlay.nix)
 				(import ./gcc/overlay.nix)
+				(import ./ghc/overlay.nix)
 				(import ./checker/overlay.nix)
 			];
 		};
@@ -36,7 +37,7 @@
 			text = [gnutar gzip];
 			gcc = [luogu-gcc];
 			gcc-930 = [luogu-gcc930];
-			rustc = [rust-bin.stable.latest.default luogu-gcc];
+			rustc = [rust-bin.stable.latest.minimal luogu-gcc];
 			ghc = [ghc];
 			python3-c = [(python313.withPackages (p: with p; [
 				numpy
@@ -60,7 +61,7 @@
 			lua = [lua];
 			mono = [mono]; # TODO: use dotnet
 			ocaml = [ocaml luogu-gcc];
-			julia = [julia];
+			julia = [julia-bin];
 		});
 	in {
 		packages."${system}" = envPkgs;
