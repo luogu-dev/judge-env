@@ -11,13 +11,31 @@
 	outputs = inputs@{ self, nixpkgs, nixpkgs_gcc930, rust-overlay, ... }: let
 		system = "x86_64-linux";
 
+		setupGlibcLocales = glibcLocales: glibcLocales.override {
+			allLocales = false;
+			locales = [
+				"C.UTF-8/UTF-8"
+				"en_US.UTF-8/UTF-8"
+				"zh_CN.UTF-8/UTF-8"
+				"zh_TW.UTF-8/UTF-8"
+				"ja_JP.UTF-8/UTF-8"
+			];
+		};
+		ljudgeLocalesOverlay = self: super: {
+			ljudge-glibcLocales = setupGlibcLocales super.glibcLocales;
+		};
+
 		inherit(nixpkgs) lib;
 		pkgs = import nixpkgs {
 			inherit system;
 			overlays = [
+				ljudgeLocalesOverlay
 				rust-overlay.overlays.default
 				(self: super: {
 					gcc930 = nixpkgs_gcc930.legacyPackages.${super.system}.gcc9;
+					gcc930_ljudge-glibcLocales = (setupGlibcLocales
+						nixpkgs_gcc930.legacyPackages.${super.system}.glibcLocales
+					);
 				})
 				(import ./testlib/overlay.nix)
 				(import ./gcc/overlay.nix)
@@ -65,6 +83,8 @@
 		});
 	in {
 		packages."${system}" = envPkgs;
-		overlays.default = self: super: { ljudge-envs = envPkgs; };
+		overlays.default = self: super: ({
+			ljudge-envs = envPkgs;
+		} // (ljudgeLocalesOverlay self super));
 	};
 }
