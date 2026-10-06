@@ -7,7 +7,7 @@ jobs:
     build:
         runs-on: ubuntu-latest
         steps:
-          - uses: endersonmenezes/free-disk-space@v3
+          - uses: endersonmenezes/free-disk-space@v4
             with:
                 remove_android: true
                 remove_dotnet: true
@@ -17,11 +17,14 @@ jobs:
                 remove_packages: 'azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*'
                 remove_packages_one_command: true
                 remove_folders: '/usr/share/swift /usr/share/miniconda /usr/share/az* /usr/local/lib/node_modules /usr/local/share/chromium /usr/local/share/powershell /usr/local/julia /usr/local/aws-cli /usr/local/aws-sam-cli /usr/share/gradle'
-          - uses: actions/checkout@v4
+                rm_cmd: rmz
+                rmz_version: '3.2.0'
+                testing: false
+          - uses: actions/checkout@v7
           - uses: cachix/install-nix-action@v31
             with:
                 nix_path: nixpkgs=channel:nixos-unstable-small
-          - uses: cachix/cachix-action@v16
+          - uses: cachix/cachix-action@v17
             with:
                 name: luogu-judge
                 authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
